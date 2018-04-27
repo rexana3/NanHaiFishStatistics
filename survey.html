@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--表格名称
+		f+年份+季度+功率段 +第几张表
+		例： f2018101
+		f表明该表格为初次输入数据，2018年份，第一季度，功率段为0-49.99，在前面四个条件下的第一张表格
+		
+		功能实现：
+		1.后台获取相应的渔船数据
+		2.后台获取相应的调查表数据
+		3.将获得的调查表数据与输入的数据比对
+		4.将出错的信息存入数据库
+	-->
+    <meta charset="UTF-8">
+	<link rel="stylesheet" href="js/layui-v2.2.4/layui/css/layui.css">
+	<script src="js/layui-v2.2.4/layui/layui.js"></script>
+	<title>分频段的信息调查录入</title>
+</head>
+<body>
+    <ul class="layui-nav" lay-filter=''>
+        <li class="layui-nav-item">
+            <a href="survey.html">调查</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="first_input.html">初次录入</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="compare_input.html">对比录入</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="state.html">状态</a>
+        </li>
+		<li class="layui-nav-item" id="my">
+ 			<a href="#">我</a>
+ 		</li>
+    </ul>
+    <div class="layui-col-md4">
+        <fieldset class="layui-elem-field" style="margin-top: 20px;">
+            <legend>信息选择</legend>
+            <div class="layui-field-box" >
+                <form class="layui-form">
+                	<div class="layui-form-item">
+                		<div class="layui-inline">
+                			<label class="layui-form-label">年份：</label>
+                			<div class="layui-input-inline">
+                				<input class="layui-input" type="text" id="year" value="2018"/>
+                			</div>
+                		</div>
+                		<div class="layui-inline">
+                			<label class="layui-form-label">季度：</label>
+                			<div class="layui-input-inline">
+	                            <select id="season">
+	                                <option value="1">第一季度</option>
+	                                <option value="2">第二季度</option>
+	                                <option value="3">第三季度</option>
+	                                <option value="4">第四季度</option>
+	                            </select>
+                			</div>
+                		</div>
+                	</div>
+                	<div class="layui-form-item">
+                    	<div class="layui-inline">
+                    		<label class="layui-form-label">渔船名：</label>
+                    		<div class="layui-input-inline">
+                    			<select id="ship" lay-filter="selectShip">
+									<option value="1">单拖</option>
+									<option value="2">双拖单产</option>
+									<option value="3">双拖双产</option>
+									<option value="4">拖贝</option>
+									<option value="5">拖虾</option>
+									<option value="6">围网</option>
+									<option value="7">罩网</option>
+									<option value="8">刺网</option>
+									<option value="9">钓具</option>
+									<option value="10">笼壶</option>
+									<option value="11">潜捕</option>
+									<option value="12">张网</option>
+									<option value="13">杂渔具</option>
+                    			</select>
+                    		</div>
+                    	</div>
+                	<!--<div class="layui-form-item">
+                		<div class="layui-inline">                			
+                			<label class="layui-form-label">记录人：</label>
+                			<div class="layui-input-inline">
+                				<input class="layui-input" type="text"/>
+                			</div>
+                		</div>
+                		<div class="layui-inline">
+                			<label class="layui-form-label">身份证：</label>
+                			<div class="layui-input-inline">
+                				<input class="layui-input" type="text"/>
+                			</div>
+                		</div>
+                	</div>-->
+                   </div>                	
+                </form> 
+                <div class="layui-form-item">
+    				<div class="layui-inline" style="margin-left: 14px;">
+    					<button class="layui-btn" id="set">加载</button>
+    					<button class="layui-btn" id="over">完成</button>	
+    				</div>
+    			</div>
+            </div>
+        </fieldset>
+        <fieldset class="layui-elem-field" style="margin-top: 20px;">
+        	<legend>提示信息</legend>
+        	<div class="layui-field-box" style="margin-top: 20px;height: 200px;color: #424542;font-size: 20px;">
+        		<h3 id="allTable">总表数：0</h3>
+        		<p id="typeTable" style="margin-top: 6px;">目前已完成分类表数：0</p>
+        	</div>
+        </fieldset>
+    </div>
+    <div class="layui-col-md8" style="border: 1px solid #e6e6e6;margin-top: 34px;">
+    	<div class="layui-collapse">
+    		<div class="layui-colla-item" id="1">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">单拖：渔船总数0，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="1t" lay-filter="1t" lay-filter="1t"></table>
+    			</div>
+    		</div>
+    		<div class="layui-colla-item" id="2">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">双拖单产：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="2t" lay-filter="2t"></table>
+    			</div>
+    		</div>  
+    		<div class="layui-colla-item" id="3">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">双拖双产：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="3t" lay-filter="3t"></table>
+    			</div>
+    		</div>
+    		<div class="layui-colla-item" id="4">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">拖贝：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="4t" lay-filter="4t"></table>
+    			</div>
+    		</div>
+    		<div class="layui-colla-item" id="5">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">拖虾：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="5t" lay-filter="5t"></table>
+    			</div>
+    		</div>
+    		<div class="layui-colla-item" id="6">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">围网：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="6t" lay-filter="6t"></table>
+    			</div>
+    		</div>
+    		<div class="layui-colla-item" id="7">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">罩网：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="7t" lay-filter="7t"></table>
+    			</div>
+    		</div>
+    		<div class="layui-colla-item" id="8">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">刺网：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="8t" lay-filter="8t"></table>
+    			</div>
+    		</div>
+    		<div class="layui-colla-item" id="9">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">钓具：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="9t" lay-filter="9t"></table>
+    			</div>
+    		</div>
+    		<div class="layui-colla-item" id="10">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">笼壶：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="10t" lay-filter="10t"></table>
+    			</div>
+    		</div> 
+    		<div class="layui-colla-item" id="11">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">潜捕：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="11t" lay-filter="11t"></table>
+    			</div>
+    		</div>
+    		<div class="layui-colla-item" id="12">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">张网：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="12t" lay-filter="12t"></table>
+    			</div>
+    		</div>
+    		<div class="layui-colla-item" id="13">
+    			<h2 class="layui-colla-title" style="font-size: 20px;">杂渔具：渔船总数1122，调查表总数0</h2>
+    			<div class="layui-colla-content" style="font-size: 18px;">
+    				<table id="13t" lay-filter="13t"></table>
+    			</div>
+    		</div>
+    	</div>
+    </div>    
+    </body>
+    <script>
+        layui.use(['jquery','layer','table','form','element'], function(){
+    		var $ = layui.jquery
+            ,table = layui.table
+            ,form = layui.form
+            ,layer = layui.layer
+			,element = layui.element; 
+			
+			$.post('http://127.0.0.1/NanHaiFishStatistics/php/cookie.php',"",function(res){
+				$('#my').text(res);
+			});
+			//渲染表格
+			var name;
+			var inform;
+			var list = new Array();
+			var shipName = ['单拖','双拖单产','双拖双产','拖贝','拖虾','围网','罩网','刺网','钓具','笼壶','潜捕','张网','杂渔具'];
+			var shipTnum = new Array();
+			for(var k=0;k<13;k++){
+				shipTnum[k] = new Array();
+				for(var p=0;p<5;p++){
+					shipTnum[k][p]="0"; 
+				}
+			}
+			//点击设置按钮
+			$('#set').click(function(){
+				//获取选择的渔船，展开右侧
+				var num = $('#ship').find('option:selected').val();
+				$("#"+num).find("div").addClass("layui-show");
+				//获取输入框中的内容
+				var content = $("#surveyNum").text();
+				//获取输入的值
+				var year = $('#year').val();
+				var ship = $('#ship').find('option:selected').text();
+				var season = $('#season').val();
+				for(var y=0;y<13;y++){
+					attain(year,shipName[y],season,y);
+				}
+				//后台获取总表数
+				var baseData={
+					year:year,
+					season:season
+				}
+				$.post('http://127.0.0.1/NanHaiFishStatistics/php/surbase.php',baseData,function(attainData){
+					$('#allTable').text("总表数："+attainData);
+					
+				});
+			});	
+			function attain(year,ship,season,y){		
+					var data={
+						year:year,
+						ship:ship,
+						season:season
+					}
+					$.post('http://127.0.0.1/NanHaiFishStatistics/php/surShip.php',data,function(res){
+						render(res,y);
+					});	
+			}
+			function render(res,y){		
+				shipTnum[y] =eval(res) ;				
+				if(y==12){
+					var sum= new Array();
+					for(var j=1;j<14;j++){
+						name ='#'+j +'t';
+						j=j-1;
+						table.render({
+							elem:name,
+							height:250,
+							cols:  [[ //标题栏
+							   {field: 'powerS', title: '功率段', width: 150}
+							    ,{field: 'shipNum', title: '渔船数', width: 150}
+							    ,{field: 'surNum', title: '调查表数',edit:true}
+							    
+							]],
+							data: [
+								{"powerS":"0-99.99kw","shipNum":shipTnum[j][0],"surNum":"0"},
+								{"powerS":"100-200kw","shipNum":shipTnum[j][1],"surNum":"0"},
+								{"powerS":"200.01-300kw","shipNum":shipTnum[j][2],"surNum":"0"},
+								{"powerS":"300.01-400kw","shipNum":shipTnum[j][3],"surNum":"0"},
+								{"powerS":"400.01-10000","shipNum":shipTnum[j][4],"surNum":"0"}
+							]
+						});	
+						//更新总表格数
+						t = j;
+						j=j+1;
+						sum = shipTnum[t][0]+shipTnum[t][1]+shipTnum[t][2]+shipTnum[t][3]+shipTnum[t][4];
+						$('#'+j).find('h2').text(shipName[t]+"：渔船总数"+sum+"，调查表总数0");
+					}					
+				}	
+			}
+			
+			//选择展开右侧
+			form.on('select(selectShip)',function(data){
+				var num = $('#ship').find('option:selected').val();
+				$("#"+num).find("div").addClass("layui-show");
+			});	
+			//表格被修改
+			var locat = 1;
+			var all=0;
+			for(var i=0;i<13;i++){
+				editTable(locat,all);
+				locat++;
+			}
+			function editTable(locat,all){
+				var para ='edit('+locat+'t)';
+				table.on(para, function(obj){ 
+					var str = $("#"+locat).find('h2').text();
+					var m=str.length;
+					var n = str.indexOf('调');
+					var j = str.substring(n+1,m);
+					var all=0;
+					var sum=0;
+					//修改表格上面的文字
+					for(var p=0;p<5;p++){
+						all = Number(all)+Number(table.cache[locat+'t'][p].surNum);
+					}
+					var s = str.replace(j,"查表总数"+all);
+					$("#"+locat).find('h2').text(s);
+					//修改总表数
+					for(var p=1;p<14;p++){
+						var newAll=0;
+						for(var q=0;q<5;q++){
+							newAll = Number(newAll)+Number(table.cache[p+'t'][q].surNum);
+						}
+						sum = Number(sum)+newAll;
+						$('#typeTable').text("目前已完成分类表数："+sum);
+					}
+				});				
+			}
+			//点击完成按钮之后，将表格数据与后台数据进行对比
+			var flag = true;
+			$('#over').click(function(){
+				flag = true;
+				var year = $('#year').val();
+				var ship = $('#ship').find('option:selected').text();
+				var season = $('#season').val();
+				
+				for(var y=0;y<13;y++){
+					var list = new Array();
+					y=y+1;
+					for(var x=0;x<5;x++){
+						list[x] =table.cache[y+'t'][x].surNum;						
+					}
+					y=y-1;
+					compareSur(year,season,shipName[y],list,y);				
+				}
+			});
+			function compareSur(year,season,ship,list,y){
+				var data={
+						year:year,
+						ship:ship,
+						season:season
+				}
+				$.post('http://127.0.0.1/NanHaiFishStatistics/php/surAttain.php',data,function(res){
+					var arr = eval(res);
+					for(var j=0;j<5;j++){
+						if(arr[j] != list[j]){
+							layer.msg(ship+"的调查表数据不符");
+							flag = false;
+							var message = {
+								table:"调查表",
+								year:year,
+								ship:ship,
+								season:season,
+								flag:'0',
+								num:""
+							}
+							$.post('http://127.0.0.1/NanHaiFishStatistics/php/surState.php',message,function(res){
+//								console.log(res);
+							});
+							
+						}
+
+						if(y==12&&flag ==true){
+							layer.msg("数据比对成功");
+							var message = {
+								table:"调查表",
+								year:year,
+								ship:"0",
+								season:season,
+								flag:'1',
+								num:""
+							}
+							$.post('http://127.0.0.1/NanHaiFishStatistics/php/surState.php',message,function(res){
+//								console.log(res);
+							});
+							break;
+						}
+					}
+				});
+			}
+			$('#my').click(function(){
+				layer.msg("欢迎你的到来");
+			});
+		});
+    </script>
+
+</html>
