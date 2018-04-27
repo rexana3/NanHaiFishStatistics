@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--表格名称解释
+			年份 + 季度 + 船名 + 功率段
+			例如：20181dtzero
+			2018年 + 第一季度 + 单拖 +0-99.99kw
+		-->
+    	<meta charset="UTF-8">
+		<link rel="stylesheet" href="js/layui-v2.2.4/layui/css/layui.css">
+ 		<script src="js/layui-v2.2.4/layui/layui.js"></script>
+   		<title>分功率段的比对信息录入</title>
+	</head>
+	<body>
+	    <ul class="layui-nav" lay-filter=''>
+	        <li class="layui-nav-item">
+	            <a href="survey.html">调查</a>
+	        </li>
+	        <li class="layui-nav-item">
+	            <a href="first_input.html">初次录入</a>
+	        </li>
+	        <li class="layui-nav-item">
+	            <a href="compare_input.html">对比录入</a>
+	        </li>
+	        <li class="layui-nav-item">
+	            <a href="state.html">状态</a>
+	        </li>
+	        <li class="layui-nav-item">
+	        	<a href="#" id="my">我</a>
+	        </li>
+	    </ul>
+	    <div class="layui-row">
+			<div class="layui-col-md4">
+				<div class="layui-row">
+					<div class="layui-col-md12">
+						<fieldset class="layui-elem-field" style="margin-top: 20px;">
+							<legend>信息选择</legend>
+							<div class="layui-field-box" >
+								<form class="layui-form">
+									<div class="layui-form-item ">
+			                            <div class="layui-inline ">
+			                                <label class="layui-form-label ">年份</label>
+			                                <div class="layui-input-inline ">
+			                                	<input type="text" value="2018" id="compare_year"  autocomplete="off " class="layui-input ">
+			                                </div>
+			                            </div>
+			                            <div class="layui-inline ">
+			                                <label class="layui-form-label ">季度</label>
+											<div class="layui-input-inline">
+												<select name="compare_section" id="compare_section">
+													<option value="1">第一季度</option>
+													<option value="2">第二季度</option>
+													<option value="3">第三季度</option>
+													<option value="4">第四季度</option>
+												</select>
+											</div>
+			                            </div>
+			                        </div>									
+									<div class="layui-form-item">
+										<label class="layui-form-label">渔船</label>
+										<div class="layui-input-inline">
+											<select name="compare_ship" id="compare_ship">
+												<option value="DT">单拖</option>
+												<option value="SD">双拖单产</option>
+												<option value="SS">双拖双产</option>
+												<option value="TB">拖贝</option>
+												<option value="TX">拖虾</option>
+												<option value="WW">围网</option>
+												<option value="ZW">罩网</option>
+												<option value="CW">刺网</option>
+												<option value="DJ">钓具</option>
+												<option value="LH">笼壶</option>
+												<option value="QB">潜捕</option>
+												<option value="ZW">张网</option>
+												<option value="ZYJ">杂渔具</option>
+											</select>
+										</div>
+									</div>
+									<div class="layui-form-item">
+										<label class="layui-form-label">功率段</label>
+										<div class="layui-input-inline">
+											<select name="compare_powerserice" id="compare_powerS">
+												<option value="0">0-99.99</option>
+												<option value="1">100-200</option>
+												<option value="2">200.01-300</option>
+												<option value="3">300.01-400</option>
+												<option value="4">400.01-10000</option>
+											</select>
+										</div>
+									</div>
+									<!--<div class="layui-form-item ">
+			                            <div class="layui-inline ">
+			                              <label class="layui-form-label ">记录人</label>
+			                              <div class="layui-input-inline ">
+			                                <input type="text" value="陈晨晨" id="compare_surveyName"  autocomplete="off " class="layui-input ">
+			                              </div>
+			                            </div>
+			                            <div class="layui-inline ">
+			                              <label class="layui-form-label ">身份证</label>
+			                              <div class="layui-input-inline ">
+			                                <input type="text" value="445122199801072332" id="compare_card" lay-verify="required|number|identity" autocomplete="off " class="layui-input ">
+			                              </div>
+			                            </div>
+			                        </div>-->
+			                        
+								</form>
+							</div>
+						</fieldset>
+					</div>
+					<div class="layui-col-md12 layui-col-md-offset1">
+						<button class="layui-btn layui-btn-lg" id="compare_load">加载</button>
+						<button class="layui-btn layui-btn-lg" id="compare_btnclear">清除</button>
+						<button class="layui-btn layui-btn-lg" id="compare_over">确认完成</button>
+					</div>
+					<span class="layui-col-md4 layui-col-md-offset1" style="font-size: 20px;margin-top: 20px;">信息提示</span>
+					<div class="layui-col-md10 layui-col-md-offset1" id="compare_prompt" style="border: 4px solid #d2d2d2;height: 100px;"></div>				
+				</div>
+			</div>
+			<div class="layui-col-md8">
+				<fieldset class="layui-elem-field" style="margin-top: 20px;">
+					<legend>数据录入</legend>
+					<form class="layui-form layui-form-pane">
+						<div class="layui-form-item layui-form-text">
+						    <label class="layui-form-label">渔船功率</label>
+						    <div class="layui-input-block">
+						    	<textarea placeholder="按表号顺序输入数据，以逗号隔开(请不要使用中文输入法)" class="layui-textarea  layui-disabled" disabled  id="compare_fishPower">1,2</textarea>
+						    </div>
+						</div>
+						<div class="layui-form-item layui-form-text">
+						    <label class="layui-form-label">总产量</label>
+						    <div class="layui-input-block">
+						    	<textarea placeholder="按表号顺序输入数据，以逗号隔开(请不要使用中文输入法)" class="layui-textarea layui-disabled" disabled id="compare_allput">44,44</textarea>
+						    </div>
+						</div>
+						<div class="layui-form-item layui-form-text">
+						    <label class="layui-form-label">总产值</label>
+						    <div class="layui-input-block">
+						    	<textarea placeholder="按表号顺序输入数据，以逗号隔开(请不要使用中文输入法)" class="layui-textarea layui-disabled" disabled id="compare_value">44,44</textarea>
+						    </div>
+						</div>
+						<div class="layui-form-item layui-form-text">
+						    <label class="layui-form-label">作业天数</label>
+						    <div class="layui-input-block">
+						    	<textarea placeholder="按表号顺序输入数据，以逗号隔开(请不要使用中文输入法)" class="layui-textarea layui-disabled" disabled id="compare_workday">20,20</textarea>
+						    </div>
+						</div>
+						<div class="layui-form-item layui-form-text">
+						    <label class="layui-form-label">渔区</label>
+						    <div class="layui-input-block">
+						    	<textarea placeholder="按表号顺序输入数据，以逗号隔开;一个调查表内的渔区用/隔开(请不要使用中文输入法)" class="layui-textarea layui-disabled" disabled id="compare_area">44,44</textarea>
+						    </div>
+						</div>
+					</form>
+				</fieldset>
+			</div>			
+		</div>
+	</body>
+	<script>
+        layui.use(['jquery','layer','form','element','layedit'], function(){
+          var $ = layui.jquery
+            ,layedit = layui.layedit
+            ,form = layui.form
+            ,layer = layui.layer
+			,element = layui.element;
+			var len;
+			var myName ="";
+			//向cookie.php发起请求
+			$.post('http://127.0.0.1/NanHaiFishStatistics/php/cookie.php',"",function(res){
+				$('#my').text(res);
+				myName = res;
+			});
+			$(document).ready(function(){
+				var sum =0;
+				//定义一个函数，获取数据库所有符合条件的表格数
+				var baseData = {
+					"ship":     $('#compare_ship').find("option:selected").text(),	
+					"powerS": $('#compare_powerS').val(),
+					"year": $('#compare_year').val(),
+					"season": $('#compare_section').val()
+				}
+				$('#compare_load').click(function(){
+					$.post('http://127.0.0.1/NanHaiFishStatistics/php/comAttain.php',baseData,function(attain){
+						sum = attain;
+						change('compare_fishPower',sum,"渔船功率");
+						change('compare_allput',sum,"总产量");
+						change('compare_value',sum,"总产值");
+						change('compare_workday',sum,"作业天数");
+						change('compare_area',sum,"渔区");
+					});
+				});
+				//该功能用来控制信息提醒
+				function change(id,sum,state){
+					$("#"+id).bind('input propertychange',function(){
+						changeDetail(id,sum,state);
+					});	
+					$('#'+id).click(function(){					
+						changeDetail(id,sum,state);
+					});
+					remove(id);
+				};
+				function changeDetail(id,sum,state){
+					var arr =$("#"+id).val().split(',');
+					len = arr.length-1;
+					if(arr[len]){
+						$('#compare_prompt').text(state+'表已输入'+arr.length+'个数据'+',还需输入'+sum+'个数据');
+						
+					}else{
+						$('#compare_prompt').text(state+'表已输入'+len+'个数据' + ',还需输入'+sum+'个数据');
+					}		
+					remove(id);
+				}
+				//该功能用来控制元素的 class的删除
+				function remove(id){
+					$("#"+id).removeAttr("disabled");
+					$("#"+id).removeClass("layui-disabled");
+				}
+			});
+			$('#compare_btnclear').click(function(){
+				$('#compare_fishPower').val("");
+				$('#compare_allput').val("");
+				$('#compare_value').val("");
+				$('#compare_workday').val("");
+				$('#compare_area').val("");
+				$('#compare_prompt').val("");
+			});
+			//点击确认按钮
+			$('#compare_over').click(function(){
+				if(!$('#compare_fishPower').val() || !$('#compare_allput').val() || !$('#compare_workday').val() || !$('#compare_value').val() || !$('#compare_area').val()){
+					layer.msg("未完成数据输入");
+					return false;
+				}
+//将数据拆分成数组，用for循环，将数组的数据一个一个地传递给后台
+				var fiArr = $('#compare_fishPower').val().split(',');
+				var alArr = $('#compare_allput').val().split(',');
+				var vaArr = $('#compare_value').val().split(',');
+				var woArr = $('#compare_workday').val().split(',');
+				var arArr = $('#compare_area').val().split(',');
+				var flen = fiArr.length;
+
+//				alert($('#compare_section').find("option:selected").text());
+				if(alArr.length != flen || vaArr.length != flen ||  woArr.length != flen|| arArr.length != flen){
+					layer.msg("未完成数据输入");
+					return false;
+				}
+				else{
+					for(var i=0 ;i<flen;i++){
+//						console.log(myName);
+						var data = {
+							"name":		$('#compare_year').val()+$('#compare_section').val()+$('#compare_ship').val()+$('#compare_powerS').val(),
+							"ship":     $('#compare_ship').find("option:selected").text(),	
+							"powerS":   $('#compare_powerS').val(),
+							"year": 	$('#compare_year').val(),
+							"season":   $('#compare_section').val(),
+							"fishPower": fiArr[i],
+							"allput":   alArr[i],
+							"value":    vaArr[i],
+							"workday":  woArr[i],
+							"area":     arArr[i],
+							"surveyName":myName,
+						
+							"start":i
+						}
+						var state = sure(data,i,flen);
+						if(state!=0){
+							break;
+						}
+					}				
+				}
+			});
+			var time=0;
+			function sure(data,i,flen){
+				$.ajax({
+					type:"post",
+					url:"http://127.0.0.1/NanHaiFishStatistics/php/comInsert.php",
+					async:false,
+					data:data,
+					success:function(res){
+						var x=flen-1;
+						if(!res){
+							if(i==x){
+//								console.log("11111");
+								layer.msg('数据无错误');
+								var errorData = {
+									table:"比对表",
+									flag:"1",
+									year:$('#compare_year').val(),
+									season:$('#compare_section').val(),
+									num:0,
+									ship:0
+								}
+								$.post('http://127.0.0.1/NanHaiFishStatistics/php/surState.php',errorData,function(res){
+								});
+							}
+						}
+						else{
+//							console.log("22222");
+							res = Number(res)+1;
+							layer.msg('第'+res+'张表'+'数据出错');	
+							time =time+1;
+							var errorData = {
+								table:"比对表",
+								flag:"0",
+								year:$('#compare_year').val(),
+								season:$('#compare_section').val(),
+								num:res,
+								ship:0
+							}
+							$.post('http://127.0.0.1/NanHaiFishStatistics/php/surState.php',errorData,function(res){
+							});
+						}
+					}
+				});
+				return time;
+			}
+			$('#my').click(function(){
+				layer.msg("欢迎你的到来");
+			});
+		});
+
+	</script>
+</html>

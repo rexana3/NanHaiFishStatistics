@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>对比状态</title>
+	<link rel="stylesheet" href="js/layui-v2.2.4/layui/css/layui.css">
+	<script src="js/layui-v2.2.4/layui/layui.js"></script>
+</head>
+<style>
+	.layui-container{
+		margin-top: 30px;
+	}
+	.danger{
+		color: #FF5722;
+	}
+	.litable{
+		font-size: 18px;
+		line-height: 30px;
+		font-family: YouYuan;
+	}
+</style>
+<body>
+ 	<ul class="layui-nav" lay-filter=''>
+ 		<li class="layui-nav-item">
+ 			<a href="survey.html">调查</a>
+ 		</li>
+ 		<li class="layui-nav-item">
+ 			<a href="first_input.html">初次录入</a>
+ 		</li>
+ 		<li class="layui-nav-item">
+ 			<a href="compare_input.html">对比录入</a>
+ 		</li> 		
+ 		<li class="layui-nav-item">
+ 			<a href="state.html">状态</a>
+ 		</li>
+ 		<li class="layui-nav-item" id="my">
+ 			<a href="#">我</a>
+ 		</li> 		
+ 	</ul>
+ 	<div class="layui-container" id="contain">
+ 		<div class="layui-row">
+ 			<div class="layui-col-md6">
+				<fieldset class="layui-elem-field">
+					<legend>第一次比对情况</legend>
+					<div class="layui-field-box">
+						<ul id="one"></ul>
+					</div>
+				</fieldset>		 				
+ 			</div>
+			<div class="layui-col-md6">
+				<fieldset class="layui-elem-field">
+					<legend>第二次比对情况</legend>
+					<div class="layui-field-box">
+						<ul id="two"></ul>
+					</div>
+				</fieldset>
+			</div>
+ 		</div>
+ 	</div>
+ 	<script>
+ 		layui.use(['jquery'],function(){
+ 			var $ = layui.jquery
+ 					,layer = layui.layer
+ 					,element = layui.element;
+			$.post('http://127.0.0.1/NanHaiFishStatistics/php/cookie.php',"",function(res){
+				$('#my').text(res);
+			});		
+ 			//获取第二次比对信息
+ 			var twoData ={
+ 				mytable:"调查表"
+ 			} 
+ 			var list = new Array();
+ 			$.post('http://127.0.0.1/NanHaiFishStatistics/php/surFind.php',twoData,function(res){
+   					list = eval("("+res+")");
+// 					console.log(list);
+						//添加li到框框里
+						for(var i=0,j=1;i<list.length;i++,j++){
+							if(list[i].ship==0){
+								$('#two').prepend("<li class='litable'>" +"<i class='layui-icon'>&#xe605;</i>"+"&nbsp"+list[i].year+"年第"+list[i].season+"季度中的调查表数据和数据库数据一致"+"</li>"); 
+							}else{
+								$('#two').prepend("<li class='litable'>"+"<i class='layui-icon danger'>&#x1006;</i>"+"&nbsp"+list[i].year+"年第"+list[i].season+"季度中的"+list[i].ship+"的调查表数据和数据库数据不一致 "+"</li>"); 
+							}
+						}
+ 			});
+  			//获取第一次比对信息
+ 			var oneData ={
+ 				mytable:"比对表"
+ 			} 
+ 			var oneList = new Array();
+ 			$.post('http://127.0.0.1/NanHaiFishStatistics/php/surFind.php',oneData,function(res){
+   					oneList = eval("("+res+")");
+// 					console.log(list);
+						//添加li到框框里
+						for(var i=0,j=1;i<oneList.length;i++,j++){
+							if(oneList[i].num!=0){
+								//错误的情况
+								$('#one').prepend("<li class='litable'>" +"<i class='layui-icon danger'>&#x1006;</i>"+"&nbsp"+oneList[i].year+"年第"+oneList[i].season+"季度时段的第"+oneList[i].num+"张表数据和数据库数据不一致"+"</li>"); 
+							}else{
+								//正确的情况
+								$('#one').prepend("<li class='litable'>"+"<i class='layui-icon'>&#xe605;</i>"+"&nbsp"+oneList[i].year+"年第"+oneList[i].season+"季度时段的数据和数据库数据一致 "+"</li>"); 
+							}
+						}
+ 			});	
+ 			$('#my').click(function(){
+				layer.msg("欢迎你的到来");
+			});
+ 		});
+ 	</script>
+</body>
+</html>

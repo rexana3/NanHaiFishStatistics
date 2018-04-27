@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>渔业捕获信息输入系统</title>
+  <link rel="stylesheet" href="js/layui-v2.2.4/layui/css/layui.css">
+  <script src="js/layui-v2.2.4/layui/layui.all.js"></script> 
+</head>
+<style>
+	#main{
+		margin: 140px;
+	}
+</style>
+<body>
+ 	<ul class="layui-nav" lay-filter=''>
+ 		<li class="layui-nav-item">
+ 			<a href="#">调查</a>
+ 		</li>
+ 		<li class="layui-nav-item">
+ 			<a href="#">初次录入</a>
+ 		</li>
+ 		<li class="layui-nav-item">
+ 			<a href="#">对比录入</a>
+ 		</li> 		
+ 		<li class="layui-nav-item">
+ 			<a href="#">状态</a>
+ 		</li>
+ 	</ul>
+ 	<div class="layui-container" id="main">
+ 		<div class="layui-row">
+ 			<div class="layui-col-md4 layui-col-md-offset3">
+ 				<fieldset class="layui-elem-field">
+ 					<legend>使用你的账号</legend>
+ 					<div class="layui-field-box">
+		 				<form class="layui-form" action="http://127.0.0.1/NanHaiFishStatistics/php/indexLogin.php" method="POST">
+		 					<div class="layui-form-item">
+		 						<label class="layui-form-label">学号</label>
+		 						<div class="layui-input-inline">
+		 							<input type="text" name="stunum" required class="layui-input" placeholder="使用你的学号进行操作"/>
+		 						</div>
+		 					</div>
+		 					<div class="layui-form-item">
+		 						<label class="layui-form-label">密码</label>
+		 						<div class="layui-input-inline">
+		 							<input type="password" name="password" required class="layui-input"/>
+		 						</div>
+		 					</div>
+		 					<div class="layui-form-item">
+						    <div class="layui-input-block">
+						      <button class="layui-btn" lay-submit lay-filter="login">登录</button>
+						      <button  class="layui-btn  layui-btn-primary" lay-submit lay-filter="signin">注册</button>						      	
+						    </div>
+						  </div>
+		 				</form> 						
+ 					</div>
+ 				</fieldset>
+ 			</div>
+ 		</div>
+ 	</div>
+ 	<script>
+ 		layui.use('form',function(){
+ 			var form = layui.form,
+ 					$ = layui.jquery,
+ 					layer = layui.layer;
+			var urlGet= window.location.search;
+			var nameindex = Number(urlGet.indexOf("="))+1;
+			var name = urlGet.slice(nameindex);
+//			alert(name);
+			if(name ==0){
+				layer.msg('账户或密码错误');
+			}
+ 			//注册按钮功能,跳转页面，完善资料
+			form.on('submit(signin)',function(data){
+					 window.location.href="sign.html";
+			});
+ 		});
+ 	</script>
+</body>
+</html>

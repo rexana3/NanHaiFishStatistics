@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<link rel="stylesheet" href="js/layui-v2.2.4/layui/css/layui.css">
+ 	<script src="js/layui-v2.2.4/layui/layui.js"></script>
+    <title>分频段的信息调查录入</title>
+</head>
+<body>
+    <ul class="layui-nav" lay-filter=''>
+        <li class="layui-nav-item">
+            <a href="#">调查</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="#">初次录入</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="#">对比录入</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="#">状态</a>
+        </li>
+    </ul>
+ 	<div class="layui-container" id="main" style="margin-top: 40px;">
+ 		<div class="layui-row">
+ 			<div class="layui-col-md8 layui-col-md-offset2">
+ 				<fieldset class="layui-elem-field">
+ 					<legend>创建你的账户</legend>
+ 					<div class="layui-field-box">
+		 				<form class="layui-form" action="http://127.0.0.1/NanHaiFishStatistics/php/indexLogin.php" method="POST">
+		 					<div class="layui-form-item">
+		 						<label class="layui-form-label">学号</label>
+		 						<div class="layui-input-inline">
+		 							<input type="text" name="stunum" required class="layui-input" placeholder="使用你的学号进行操作"/>
+		 						</div>
+		 						<label class="layui-form-label">密码</label>
+		 						<div class="layui-input-inline">
+		 							<input type="password" name="password" required class="layui-input"/>
+		 						</div>
+		 					</div>
+		 					<div class="layui-form-item">
+		 						<label class="layui-form-label">姓名</label>
+		 						<div class="layui-input-inline">
+		 							<input type="text" name="usename" required class="layui-input"/>
+		 						</div>
+		 						<label class="layui-form-label">身份证</label>
+		 						<div class="layui-input-inline">
+		 							<input type="text" name="idcard" required class="layui-input"/>
+		 						</div>
+		 					</div>
+		 					
+		 					<div class="layui-form-item">
+		 						<label class="layui-form-label">班级</label>
+		 						<div class="layui-input-inline">
+		 							<input type="text" name="class" required class="layui-input"/>
+		 						</div>
+		 						<label class="layui-form-label">电话</label>
+		 						<div class="layui-input-inline">
+		 							<input type="text" name="tel" required class="layui-input"/>
+		 						</div>
+		 					</div>
+		 					<div class="layui-form-item">
+		 						<div class="layui-input-block">
+							      <button class="layui-btn" lay-submit lay-filter="sign">注册</button>
+							    </div>
+		 					</div>
+		 				</form> 						
+ 					</div>
+ 				</fieldset>
+ 			</div>
+ 		</div>
+ 	</div>
+</body>
+<script>
+	layui.use(['jquery','form'],function(){
+		var $ = layui.jquery
+		,form = layui.form;
+		
+		//点击按钮
+		form.on('submit(sign)',function(data){
+//			console.log(data.field);
+			$.post('http://127.0.0.1/NanHaiFishStatistics/php/indexSign.php',data.field,function(res){
+				layer.msg(res);
+			});
+			window.location.href="first_input.html";
+   		});
+	});
+</script>		
+</html>
+
+	

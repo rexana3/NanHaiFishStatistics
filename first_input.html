@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--表格名称
+		f+年份+季度+功率段 +第几张表
+		例： f2018101
+		f表明该表格为初次输入数据，2018年份，第一季度，功率段为0-49.99，在前面四个条件下的第一张表格
+	-->
+    <meta charset="UTF-8">
+		<link rel="stylesheet" href="js/layui-v2.2.4/layui/css/layui.css">
+ 		<script src="js/layui-v2.2.4/layui/layui.js"></script>
+    <title>分频段的信息调查录入</title>
+</head>
+<body>
+<div>
+    <ul class="layui-nav" lay-filter=''>
+        <li class="layui-nav-item">
+            <a href="survey.html">调查</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="first_input.html">初次录入</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="compare_input.html">对比录入</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="state.html">状态</a>
+        </li>
+        <li class="layui-nav-item" >
+        	<a href="#" id="my">我</a>
+        </li>
+    </ul>
+    <!--<div style="position:absolute; font-size: 20px;font-family: youyuan;top: 20px;right:0px;color: #c4bda8;">
+    	欢迎
+    </div>-->
+    <div class="layui-col-md6">
+        <fieldset class="layui-elem-field">
+            <legend>基本信息录入</legend>
+            <div class="layui-field-box" >
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">年份：</label>
+                          <div class="layui-input-inline">
+                            <select id="year" lay-search>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                                <option value="2014">2014</option>
+                            </select>
+                          </div>
+                          <label class="layui-form-label">季度：</label>
+                          <div class="layui-input-inline">
+                            <select id="season">
+                                <option value="1">第一季度</option>
+                                <option value="2">第二季度</option>
+                                <option value="3">第三季度</option>
+                                <option value="4">第四季度</option>
+                            </select>
+                          </div>
+                    </div>
+                    <div class="layui-form-item ">
+                          <label class="layui-form-label">功率(kw)：</label>
+                          <div class="layui-input-inline">
+                            <input type="text" id="power" lay-verify="required|vpower" autocomplete="off" class="layui-input" value="1">
+                          </div>
+                          <label class="layui-form-label">功率段：</label>
+                          <div class="layui-input-inline">
+                            <select id="powerSection">
+                                <option value="0">0-99.99</option>
+                                <option value="1">100-200</option>
+                                <option value="2">200.01-300</option>
+                                <option value="3">300.01-400</option>
+                                <option value="4">400.01-10000</option>
+                            </select>
+                          </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">表号：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="formNum" placeholder="无需输入系统自动生成" name="formNum"   class="layui-input layui-disabled" disabled >
+                        </div>
+	                    <label class="layui-form-label">调查时间：</label>
+	                    <div class="layui-input-inline">
+	                        <input type="text" class="layui-input" id="surveyTime" lay-verify="required|date">
+	                    </div>
+                    </div>
+                    <!--<div class="layui-form-item ">
+                    	<label class="layui-form-label ">记录人：</label>
+                    	<div class="layui-input-inline ">
+                    		<input type="text" value="ddd" id="surveyName" lay-verify="required|vSurveyName" autocomplete="off " class="layui-input ">
+                    	</div>
+                    	<label class="layui-form-label ">身份证：</label>
+                   		<div class="layui-input-inline ">
+                        	<input type="text" value="445122199801072332" id="card" lay-verify="required|number|identity" autocomplete="off " class="layui-input ">
+                    	</div>
+                    </div>-->
+                    <div class="layui-form-item">
+                          <label class="layui-form-label">总产量：</label>
+                          <div class="layui-input-inline">
+                            <input type="text" value="44" placeholder="单位kg" id="output" lay-verify="required|number|allOutput" autocomplete="off " class="layui-input ">
+                          </div>
+                          <label class="layui-form-label">总产值：</label>
+                          <div class="layui-input-inline">
+                            <input type="text" value="44" placeholder="单位元" id="value" lay-verify="required|number|vOutputValue " autocomplete="off " class="layui-input ">
+                          </div>
+                    </div>
+                    <div class="layui-form-item ">
+                          <label class="layui-form-label">作业天数：</label>
+                          <div class="layui-input-inline">
+                            <input type="text" value="20" id="workday" lay-verify="vWorkDays " autocomplete="off " class="layui-input ">
+                          </div>
+                          <label class="layui-form-label">渔区：</label>
+                          <div class="layui-input-inline">
+                            <input type="text" value="44" placeholder="用|分隔" id="fishArea" lay-verify="required|vFishArea" autocomplete="off " class="layui-input ">
+                          </div>
+                    </div>
+                    <div class="layui-form-item">
+                		<label class="layui-form-label">船名：</label>
+                		<div class="layui-input-inline">
+                			<select id="ship">
+								<option value="DT">单拖</option>
+								<option value="SD">双拖单产</option>
+								<option value="SS">双拖双产</option>
+								<option value="TB">拖贝</option>
+								<option value="TX">拖虾</option>
+								<option value="WW">围网</option>
+								<option value="ZW">罩网</option>
+								<option value="CW">刺网</option>
+								<option value="DJ">钓具</option>
+								<option value="LH">笼壶</option>
+								<option value="QB">潜捕</option>
+								<option value="ZW">张网</option>
+								<option value="ZYJ">杂渔具</option>
+                			</select>
+                		</div>
+                    </div>
+                </form>
+                <button class="layui-btn" lay-submit id="baseSubmit">提交</button>    
+            </div>
+        </fieldset>
+        </div>
+        <div class="layui-col-md6">
+            <fieldset class="layui-elem-field">
+            	<legend>表格信息录入</legend>
+	            <div class="layui-field-box">
+	                <form class="layui-form">
+	                    <div class="layui-form-item">
+                            <label class="layui-form-label">ID:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="id" class="layui-input layui-disabled" disabled value="1"/>
+                            </div>
+                            <label class="layui-form-label">鱼名:</label>
+                            <div class="layui-input-inline">
+                                <select  type="text" id="fishName" name="inFishName" lay-search=""/>
+	                                <option value="99"></option>
+	                                <option value="0">篮子鱼</option>
+	                                <option value="1">马鲛</option>
+	                                <option value="2">鲔</option>
+	                                <option value="3">乌鲳</option>
+	                                <option value="4">大目金枪鱼</option>
+	                                <option value="5">鲯鳅</option>
+	                                <option value="6">带鱼</option>
+	                                <option value="7">吉打鲹</option>
+	                                <option value="8">枪乌贼</option>
+	                                <option value="9">黄鳍金枪鱼</option>
+	                                <option value="10">丽叶鲹</option>
+	                                <option value="11">鲾</option>
+	                                <option value="12">蛇鲻</option>
+	                                <option value="13">腹刺鲀</option>
+	                                <option value="14">大眼鲷</option>
+	                                <option value="15">二长棘鲷</option>
+	                                <option value="16">贝</option>
+	                                <option value="17">蓝圆鲹</option>
+	                                <option value="18">海鳗</option>
+	                                <option value="19">金线鱼</option>
+	                                <option value="20">乌贼</option>
+	                                <option value="21">腹刺鲀</option>
+	                                <option value="22">蟹</option>
+	                                <option value="23">马面鲀</option>
+	                                <option value="24">宝刀鱼</option>
+	                                <option value="25">小公鱼</option>
+	                                <option value="26">黄鳍金枪鱼</option>
+	                                <option value="27">眼镜鱼</option>
+	                                <option value="28">魣</option>
+	                                <option value="29">颌针鱼</option>
+	                                <option value="30">白姑鱼</option>
+	                                <option value="31">大眼鲷</option>
+	                                <option value="32">鯻</option>
+	                                <option value="33">南鲳</option>
+	                                <option value="34">蓝圆鲹</option>
+	                                <option value="35">鲱鲤</option>
+	                                <option value="36">大甲鲹</option>
+	                                <option value="37">棱鳀</option>
+	                                <option value="38">羽鳃鲐</option>
+	                                <option value="39">鲱鲤</option>
+	                                <option value="40">虾</option>
+	                                <option value="41">鳌虾</option>
+	                                <option value="42">斑点马鲛</option>
+	                                <option value="43">康氏马鲛</option>
+	                                <option value="44">条文斑竹鲨</option>
+	                                <option value="45">金钱鱼</option>
+	                                <option value="46">青干金枪鱼</option>
+	                                <option value="47">红娘鱼</option>
+	                                <option value="48">三线矶鲈</option>
+	                                <option value="49">银牙鱼或</option>
+	                                <option value="50">蓝点马鲛</option>
+								</select>
+                           </div>
+	                    </div>
+	                    <div class="layui-form-item ">
+                            <label class="layui-form-label ">重量:</label>
+                            <div class="layui-input-inline ">
+                                <input type="text" id="fishWeight" name="inFishWeight" class="layui-input" value="876"/>
+                            </div>
+                            <label class="layui-form-label">单价：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="fishPrice" name="inFishPirce" class="layui-input" value="129"/>
+                            </div>
+	                    </div>
+	                </form>
+	                <button id="add" class="layui-btn layui-disabled" lay-submit  disabled="flag">添加</button>
+					<button id="clearALL" class="layui-btn"  type="reset">清空</button>               
+	           </div>
+            </fieldset>	           
+            <table id="inputData" lay-filter="attain"></table>
+	        <script type="text/html" id="bar">
+				<a class="layui-btn layui-btn-sm"  lay-event="edit">编辑</a>
+			</script>
+	        <button id="endSure" class="layui-btn " lay-filter='btn' >提交表格</button>	                   
+        </div>
+    </body>
+    <script>
+        layui.use(['jquery','layer','table','form','element'], function(){
+        	
+        	var fishData = new Array();
+        	var fileNum;
+        	var file;
+        	var fileName;
+        	var $ = layui.jquery
+	            ,table = layui.table
+	            ,form = layui.form
+	            ,layer = layui.layer
+				,element = layui.element;
+				
+			//获取此刻登录的用户
+			var urlGet= window.location.search;
+			var nameindex = Number(urlGet.indexOf("="))+1;
+			var myname = decodeURI(urlGet.slice(nameindex));
+			//把导航栏中的“我”改为用户名
+//			console.log(myname);
+			$('#my').text(myname);
+			$.post('http://127.0.0.1/NanHaiFishStatistics/php/cookie.php',"",function(res){
+				$('#my').text(res);
+			});				
+        	var flag = false;
+        	var record =0; //记录第一个表格的id
+          //第一个实例 
+        	var tableIns = table.render({
+	            id:'inputData'
+	            ,elem: '#inputData'     
+	            ,height: 315
+	            ,page: true //开启分页
+	            ,cols: [[ //表头
+	               {type:'checkbox'}
+	              ,{field: 'id', title: 'ID'}
+	              ,{field: 'fishName', title: '鱼名'}
+	              ,{field: 'fishWeight', title: '重量/kg'}
+	              ,{field: 'fishPrice', title: '单价'}
+	              ,{fixed: 'right', width:150,  align:'center',toolbar: '#bar'}
+	        	]]
+         });
+
+			table.on('tool(attain)',function(obj){
+//				console.log(record);
+				var name = "0";
+				var weight = "0";
+				var price = "0";
+				var data = obj.data;
+				var layEvent = obj.event;
+				 if(layEvent === 'edit'){
+				 	//分别弹出三个框，修改鱼名，重量和单价。并更新表格
+					layer.prompt({
+						formType:2
+						,title:'修改ID为 '+data.id+'的单价'
+						,value:data.fishPrice
+					},function(value,index){
+						layer.close(index);	
+						obj.update({
+	                   		 fishPrice: value
+	               		});
+	               		price = value;
+	               		 sendChange(name,weight,price,data);
+	               		 
+					});				 	
+					layer.prompt({
+						formType:2
+						,title:'修改ID为 '+data.id+'的鱼名'
+						,value:data.fishName
+					},function(value,index){
+						layer.close(index);	
+//						changeData.fishName = value;
+						name = value;
+//						console.log(name);
+						obj.update({
+	                   		 fishName: value
+	               		 });
+	               		 var changeData = {
+	               		 	"fishName":value,
+	               		 	"record":record
+	               		 }
+	               		 sendChange(name,weight,price,data);
+					});
+					layer.prompt({
+						formType:2
+						,title:'修改ID为 '+data.id+' 的重量'
+						,value:data.fishWeight
+					},function(value,index){
+						layer.close(index);	
+						obj.update({
+	                   		 fishWeight: value
+	               		 });
+	               		 weight = value;
+	               		 sendChange(name,weight,price,data);
+					});
+				 }
+			});
+			//定义一个功能，发送数据给后台;changeData是修改后的值，data是原来的值。
+			function sendChange(name,weight,price,data){
+//				console.log(data.fishWeight);
+				if(price!="0" && weight!="0" && name!="0"){
+					var changeData ={
+						"record":record,
+						"fishName":name,
+						"fishWeight":weight,
+						"fishPrice":price,
+						"oldName":data.fishName,
+						"oldPrice":data.fishPrice,
+						"oldWeight":data.fishWeight
+					}
+					 $.ajax({
+				        url: "http://127.0.0.1/NanHaiFishStatistics/php/firstChange.php",
+				        type: "POST",
+				        data:changeData,
+				        dataType: "json",
+				        success: function(data){
+							console.log("成功");
+				        }
+				   });
+					
+				}
+
+			}
+			
+			var sum =1;	
+			
+//基础信息的验证,表号的生成
+			$('#baseSubmit').click(function(){
+				var year = $('#year').val();
+				var season =$('#season').val(); //显示第一季度
+				var power = $('#power').val();
+				var powerSection = $('#powerSection').val(); 
+				var surveyTime = $('#surveyTime').val();
+				var surveyName = name;
+//				console.log(name);
+//				var card = $('#card').val();
+				var output = $('#output').val();
+				var value = $('#value').val();
+				var workday = $('#workday').val();
+				var fishArea = $('#fishArea').val();
+				var ship = $('#ship').find("option:selected").text();
+				//对数据进行校验
+			//1.功率只能保留小数点后两位；功率和功率段是否匹配
+				var ePowerStr = power.toString();
+				var len = power.length;
+				var doeLen = power.indexOf(".");
+				var sub = len-doeLen;
+				if(isNaN(power)){
+					layer.msg("功率值必须为数字");
+					return false;
+				}
+				else if(sub>3 || sub<2){
+						layer.msg("功率值保留两位小数");
+						return false;
+				}
+			//2功率段匹配
+				var section = $('#powerSection').val(); 
+				if(section == 0){
+					if(power<0 || power>99.99){
+						layer.msg('功率与功率段不符');
+						return false;
+					}
+				}else if(section == 1){
+					if(power<100 || power>200){
+						layer.msg('功率与功率段不符');
+						return false;
+					}					
+				}else if(section == 2){
+					if(power<200.01 || power>300){
+						layer.msg('功率与功率段不符');
+						return false;
+					}					
+				}else if(section == 3){
+					if(power<300.01 || power>400){
+						layer.msg('功率与功率段不符');
+						return false;
+					}					
+				}else if(section == 4){
+					if(power<400.01 || power>10000){
+						layer.msg('功率与功率段不符');
+						return false;
+					}					
+				}
+			//3.记录人信息验证
+//				if(surveyName.length<2 || surveyName.length>4){
+//					layer.msg('请输入正确的姓名');
+//					return false;
+//				}
+			//4.作业天数
+				if($('#workday').val()>30){
+					layer.msg("作业天数不符合事实");
+					return false;
+				}
+				//发送基本信息到后台查询在该情况下已存在多少张表格
+				
+				var baseData ={
+					year: year,
+					season: season,
+					powerSection:powerSection
+				}
+//				console.log(baseData.season);
+				$.post('http://127.0.0.1/NanHaiFishStatistics/php/firstquest.php',baseData,function(num){
+//					console.log(num);
+					num = Number(num)+1;
+					//形成表号 年+季度+功率段+第几张表
+					formName = "f"+year+$('#season').val()+$('#powerSection').val()+num;
+					$('#formNum').attr('value',formName);
+					flag = true;
+					if(flag){
+						$('#baseSubmit').addClass("layui-disabled");
+						$('#baseSubmit').attr("disabled","false");
+						$('#add').removeClass("layui-disabled");
+						$('#add').removeAttr("disabled");
+							//但是个人信息不可更改
+//						$('#surveyName').addClass("layui-disabled");
+//						$('#surveyName').attr("disabled","true");
+//						$('#card').addClass("layui-disabled");
+//						$('#card').attr("disabled","true");
+//						console.log(myname);
+						var data ={
+							year: year,
+							season: season,
+							fileName:fileName,
+							tableID:num,
+							power:power,
+							powerSection:powerSection,
+							surveyTime:surveyTime,
+							surveyName:myname,
+							output:output,
+							value:value,
+							workday:workday,
+							fishArea:fishArea,				
+							formName:formName,
+							ship: ship
+						}
+						//发送数据和接收数据用一个post就可以了。
+						$.post('http://127.0.0.1/NanHaiFishStatistics/php/firstbase1.php',data,function(attdata){
+							record =  attdata;
+						});
+					}	
+					layer.msg('信息提交成功且不可修改');
+				});
+			});	
+		//点击添加按钮，并进行表格重载
+			$('#add').click(function(){
+				var fishName = $('#fishName').find("option:selected").text();
+				var fishWeight = $('#fishWeight').val();
+				var fishPrice = $('#fishPrice').val();
+				//id自动加1
+				var fishId = $("#id").val();
+				fishId = Number(fishId)+1;
+				$("#id").attr('value',fishId);
+				var data ={
+					"fishName":fishName,
+					"fishWeight":fishWeight,
+					"fishPrice":fishPrice,
+					"record":record
+				}
+
+				$.post('http://127.0.0.1/NanHaiFishStatistics/php/firstInsert1.php',data);
+				
+				//表格重载
+				var tableIns = table.render({
+		            id:'inputData'
+		            ,elem: '#inputData'     
+		            ,height: 315
+		            ,url:'http://127.0.0.1/NanHaiFishStatistics/php/firstTableR1.php'
+		            ,page: false //关闭分页
+		            ,cols: [[ //表头
+		               {type:'checkbox'}
+		              ,{field: 'id', title: 'ID'}
+		              ,{field: 'fishName', title: '鱼名'}
+		              ,{field: 'fishWeight', title: '重量/kg'}
+		              ,{field: 'fishPrice', title: '单价'}
+		              ,{fixed: 'right', width:150, align:'center', toolbar: '#bar'}
+		            ]]
+		            ,where: {
+		            	record:record
+		            }
+		       });			        
+			});
+			//清空按钮
+			$('#clearALL').click(function(){
+				$('#fishWeight').attr('value',"");
+				$('#fishPrice').attr('value',"");
+			});
+			$("#endSure").click(function(){
+//				sum = sum+1;
+				//表号清空
+				$('#formNum').attr('value',"");
+				
+				//提交按钮可按
+				$('#baseSubmit').removeClass("layui-disabled");
+				$('#baseSubmit').removeAttr("disabled");
+				$('#add').addClass("layui-disabled");
+				$('#add').attr("disabled","flase");
+				
+				//功率、产值、产量、作业天数、渔区 清空
+				$('#power').val("");
+				$('#value').val("");
+				$('#output').val("");
+				$('#workday').val("");
+				$('#fishArea').val("");
+				//重量、单价清空
+				$('#fishWeight').val("");
+				$('#fishPrice').val("");
+				//ID置1
+				$('#id').val("1");
+			});
+			$('#my').click(function(){
+				layer.msg("欢迎你的到来");
+			});
+        });
+        var nowDate = new Date();
+        layui.use('laydate', function(){
+          var laydate = layui.laydate;
+          laydate.render({
+            elem: '#surveyTime' //指定元素
+            ,value:nowDate
+          });
+        });
+        
+    </script>
+
+</html>
